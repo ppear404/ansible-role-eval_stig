@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  role_name: eval_stig
+  description: Stage Evaluate-STIG and configure monthly assessments on Red Hat family Linux and Windows hosts.
+  license: MIT
+  min_ansible_version: "2.12"
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: Windows
+      versions:
+        - all
+  galaxy_tags:
+    - security
+    - stig
+    - compliance
+
+dependencies: []

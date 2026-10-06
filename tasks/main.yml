@@ -1,0 +1,9 @@
+---
+# tasks file for ansible-role-eval_stig
+- name: Include linux tasks for eval_stig role
+  include_tasks: linux.yml
+  when: ansible_os_family == "RedHat"
+
+- name: Include windows tasks for eval_stig role
+  include_tasks: windows.yml
+  when: ansible_os_family == "Windows"

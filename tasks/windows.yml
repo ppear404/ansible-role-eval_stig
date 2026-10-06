@@ -1,0 +1,45 @@
+---
+- name: Copy the evaluate-stig package to the host
+  ansible.windows.win_copy:
+    src: "{{ eval_stig_latest }}"
+    dest: "{{ win_eval_stig_dest }}"
+
+- name: Extract eval_stig files on remote server
+  community.windows.win_unzip:
+    src: "{{ win_eval_stig_dest }}\\evaluate-stig-{{ eval_stig_version }}.tar.gz"
+    dest: "{{ win_eval_stig_dest }}"
+
+- name: Copy the answer files to the host
+  ansible.windows.win_copy:
+    src: "{{ answer_files_src }}"
+    dest: "{{ win_answer_files_dest }}"
+
+- name: Create monthly Eval STIG scheduled task
+  community.windows.win_scheduled_task:
+    name: "Eval STIG Monthly Assessment"
+    description: "Evaluate-STIG assessment | Monthly"
+
+    actions:
+      - path: "powershell.exe"
+        arguments: >-
+          -NoProfile
+          -ExecutionPolicy Bypass
+          -File "{{ win_eval_stig_dest }}\evaluate-stig-{{ eval_stig_version }}\Src\Evaluate-STIG\Evaluate-STIG.ps1"
+          -Output CKLB
+
+    triggers:
+      - type: monthly
+        days_of_month: 31
+        start_boundary: "{{ eval_stig_start_boundary }}"
+        run_on_last_day_of_month: true
+
+    username: "SYSTEM"
+    allow_demand_start: true
+    allow_hard_terminate: true
+    multiple_instances: 2
+    run_level: highest
+    start_when_available: true
+    author: "Ansible"
+    state: present
+    enabled: true
+      

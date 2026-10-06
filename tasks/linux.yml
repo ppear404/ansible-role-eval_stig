@@ -1,0 +1,33 @@
+---
+- name: Create directory for eval_stig on remote server
+  file:
+    path: "{{ linux_eval_stig_dest }}"
+    state: directory
+
+- name: Copy files from local to remote server
+  copy:
+    src: "{{ eval_stig_latest }}"
+    dest: "{{ linux_eval_stig_dest }}"
+
+- name: Extract eval_stig files on remote server
+  unarchive:
+    src: "{{ linux_eval_stig_dest }}/evaluate-stig-{{ eval_stig_version }}.tar.gz"
+    dest: "{{ linux_eval_stig_dest }}"
+    remote_src: yes
+
+- name: Copy answer files to remote server
+  copy:
+    src: "{{ answer_files_src }}"
+    dest: "{{ linux_answer_files_dest }}"
+
+- name: Set execute permissions for eval_stig script on remote server
+  file:
+    path: "{{ linux_eval_stig_dest }}/evaluate-stig-{{ eval_stig_version }}/Src/Evaluate-STIG/Evaluate-STIG_Bash.sh"
+    mode: '0755'
+
+- name: Configure a cron job to run eval_stig on remote server
+  cron:
+    name: "Run eval_stig"
+    special_time: "{{ linux_eval_stig_cron_schedule | default('monthly') }}"
+    user: root
+    job: "cd {{ linux_eval_stig_dest }}/evaluate-stig-{{ eval_stig_version }}/Src/Evaluate-STIG && ./Evaluate-STIG_Bash.sh --Output CKLB"

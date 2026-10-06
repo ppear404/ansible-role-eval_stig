@@ -1,0 +1,22 @@
+---
+# defaults file for ansible-role-eval_stig
+
+eval_stig_version: "1.2607.2"
+
+# Eval STIG latest version source path.
+eval_stig_latest: "/files/public/software/eval-stig/evaluate-stig-{{ eval_stig_version }}.tar.gz"
+
+# Destination path on the remote server to copy eval_stig files. This path will be created if it does not exist.
+linux_eval_stig_dest: "/opt/eval_stig"
+win_eval_stig_dest: "C:\\tmp"
+
+# Answer files main source path on local server. This path will be copied to remote server.
+answer_files_src: "/files/public/software/eval-stig/answer_files/"
+
+# Destination path linux on remote server to copy answer files. Currently expects to land in eval_stig_latest directory structure. This path will be created if it does not exist.
+linux_answer_files_dest: "/opt/eval_stig/evaluate-stig-{{ eval_stig_version }}/Src/Evaluate-STIG/AnswerFiles"
+win_answer_files_dest: "C:\\tmp\\evaluate-stig-{{ eval_stig_version }}\\Src\\Evaluate-STIG\\AnswerFiles"
+
+# tasks scheduling variables
+eval_stig_start_boundary: "2026-10-01T00:00:00" # windows scheduled task start boundary date and time in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
+linux_eval_stig_cron_schedule: "monthly" # valid values: "monthly", "weekly", "daily", "hourly", "reboot"

@@ -8,6 +8,7 @@
   community.windows.win_unzip:
     src: "{{ win_eval_stig_dest }}\\evaluate-stig-{{ eval_stig_version }}.tar.gz"
     dest: "{{ win_eval_stig_dest }}"
+    delete_archive: true
 
 - name: Copy the answer files to the host
   ansible.windows.win_copy:

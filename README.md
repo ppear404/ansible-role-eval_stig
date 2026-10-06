@@ -62,6 +62,10 @@ Override defaults in inventory or play variables when your artifact repository o
 
 The Linux cron job uses `linux_eval_stig_cron_schedule`, whose default is `monthly`. The Windows task runs on the last day of each month and uses `eval_stig_start_boundary` as its start boundary. Set that value to the desired ISO 8601 date and time for your deployment. The role also does not remove older package versions when `eval_stig_version` changes.
 
+## Ad-hoc Command for Windows to run the scheduled task manually
+```bash
+ansible windows_servers -m win_shell -a 'Start-ScheduledTask -TaskName "Eval STIG Monthly Assessment"'
+
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for the full license text.

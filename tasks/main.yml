@@ -1,9 +1,32 @@
 ---
 # tasks file for ansible-role-eval_stig
 - name: Include linux tasks for eval_stig role
-  include_tasks: linux.yml
+  ansible.builtin.include_tasks: 
+    file: linux.yml
+    
+    apply:
+      tags:
+      - configure
+  tags:
+    - configure
   when: ansible_os_family == "RedHat"
 
 - name: Include windows tasks for eval_stig role
-  include_tasks: windows.yml
+  ansible.builtin.include_tasks: 
+    file: windows.yml
+    
+    apply:
+      tags:
+      - configure
+  tags:
+    - configure
   when: ansible_os_family == "Windows"
+  
+- name: Include checklist fetch tasks for eval_stig role
+  ansible.builtin.include_tasks:
+    file: checklist_fetch.yml
+    apply:
+      tags:
+        - fetch
+  tags:
+    - fetch

@@ -20,3 +20,10 @@ win_answer_files_dest: "C:\\tmp\\evaluate-stig-{{ eval_stig_version }}\\Src\\Eva
 # tasks scheduling variables
 eval_stig_start_boundary: "2026-10-01T00:00:00" # windows scheduled task start boundary date and time in ISO 8601 format (YYYY-MM-DDTHH:MM:SS)
 linux_eval_stig_cron_schedule: "monthly" # valid values: "monthly", "weekly", "daily", "hourly", "reboot"
+
+# artifact storage variables
+win_checklist_storage_path: "C:\\Users\\Public\\Documents\\STIG_Compliance\\{{ ansible_hostname }}\\Checklist\\"
+linux_checklist_storage_path: "/opt/STIG_Compliance/{{ ansible_hostname | upper }}/Checklist/"
+
+# Currently confiugured to store fetched checklist on the ansible control node. This path will be created if it does not exist.
+checklist_archive_storage_path: "/opt/STIG_Compliance/Checklist_Archive"

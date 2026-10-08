@@ -1,5 +1,8 @@
 ---
-- hosts: all
+- name: "Run eval_stig role"
+  hosts: ol91:ol92:dc1:ms1
+  become: true
+  gather_facts: true
 
   roles:
     - eval_stig

@@ -38,6 +38,7 @@ ansible-galaxy collection install -r requirements.yml
 | `eval_stig_start_boundary` | `2026-10-01T00:00:00` | Windows scheduled task start boundary in ISO 8601 format (`YYYY-MM-DDTHH:MM:SS`). |
 | `linux_eval_stig_cron_schedule` | `monthly` | Linux cron special time: `monthly`, `weekly`, `daily`, `hourly`, or `reboot`. |
 | `checklist_archive_storage_path` | `/opt/STIG_Compliance/Checklist_Archive` | Controller-side directory where fetched checklist files are archived under a subdirectory for each inventory host. |
+| `git_repo_path` | `/opt/STIG_Compliance/Checklist_Archive` | Controller-side Git repository path used by the `git` tag to commit and push archived checklist changes. The repository must already be initialized with an `origin` remote. |
 
 Override defaults in inventory or play variables when your artifact repository or desired installation paths differ. Keep the destination paths aligned with the extracted package version.
 
@@ -61,10 +62,11 @@ Override defaults in inventory or play variables when your artifact repository o
 
 ## Tags
 
-The role provides two tags so configuration and checklist collection can be run separately:
+The role provides tags so configuration, checklist collection, and Git publishing can be run separately:
 
 - `configure` stages Evaluate-STIG and its answer files, then creates or updates the scheduled assessment on supported hosts.
 - `fetch` copies existing `.cklb` checklist files from the managed hosts into `checklist_archive_storage_path/<inventory_hostname>/` on the controller.
+- `git` stages all changes in `git_repo_path`, commits them when there are staged changes, and pushes to `origin/main`. The commit message is `Update STIG compliance checklists`.
 
 Run these operations in separate invocations in general. Configuration sets up the scheduled assessment; fetching is for collecting checklist files produced by an assessment.
 
@@ -74,9 +76,12 @@ ansible-playbook -i inventory.ini eval_stig.yml --tags configure
 
 # Collect checklist files
 ansible-playbook -i inventory.ini eval_stig.yml --tags fetch
+
+# Commit and push changes in the configured checklist repository
+ansible-playbook -i inventory.ini eval_stig.yml --tags git
 ```
 
-The playbook must include the `eval_stig` role and target the appropriate hosts. The `fetch` tag uses `checklist_archive_storage_path` from the role defaults unless overridden.
+The playbook must include the `eval_stig` role and target the appropriate hosts. The `fetch` tag uses `checklist_archive_storage_path` from the role defaults unless overridden. The `git` task runs once on the Ansible controller, so Git must be installed there and its credentials must allow pushing to `origin/main`. Override `git_repo_path` if the repository is stored elsewhere.
 
 ## Scheduling notes
 

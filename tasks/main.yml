@@ -30,3 +30,12 @@
         - fetch
   tags:
     - fetch
+
+- name: Push changes to git repository if any
+  ansible.builtin.include_tasks:
+    file: git_manage.yml
+    apply:
+      tags:
+        - git
+  tags:
+    - git

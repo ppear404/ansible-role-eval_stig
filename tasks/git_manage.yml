@@ -1,0 +1,30 @@
+- name: Commit and push Git repository
+  block:
+    - name: Stage repository changes
+      ansible.builtin.command:
+        cmd: git add -A
+        chdir: "{{ git_repo_path }}"
+      changed_when: false
+
+    - name: Check for staged changes
+      ansible.builtin.command:
+        cmd: git diff --cached --quiet
+        chdir: "{{ git_repo_path }}"
+      register: git_diff
+      changed_when: false
+      failed_when: git_diff.rc not in [0, 1]
+
+    - name: Commit changes
+      ansible.builtin.command:
+        cmd: git commit -m "Update STIG compliance checklists"
+        chdir: "{{ git_repo_path }}"
+      when: git_diff.rc == 1
+
+    - name: Push to origin/main
+      ansible.builtin.command:
+        cmd: git push origin main
+        chdir: "{{ git_repo_path }}"
+
+  delegate_to: localhost
+  become: false
+  run_once: true

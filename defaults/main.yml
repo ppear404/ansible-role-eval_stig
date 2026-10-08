@@ -27,3 +27,7 @@ linux_checklist_storage_path: "/opt/STIG_Compliance/{{ ansible_hostname | upper 
 
 # Currently confiugured to store fetched checklist on the ansible control node. This path will be created if it does not exist.
 checklist_archive_storage_path: "/opt/STIG_Compliance/Checklist_Archive"
+
+# Push new checklists to git repository. This path will be created if it does not exist.
+# Repo should already exist and be initialized with a remote origin. This path will be created if it does not exist.
+git_repo_path: "/opt/STIG_Compliance/Checklist_Archive"

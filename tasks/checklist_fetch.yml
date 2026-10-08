@@ -1,0 +1,39 @@
+---
+- name: Ensure checklist archive directory exists on controller
+  ansible.builtin.file:
+    path: "{{ checklist_archive_storage_path }}/{{ inventory_hostname }}"
+    state: directory
+    owner: "{{ lookup('ansible.builtin.env', 'USER') }}"
+    mode: '0755'
+  delegate_to: localhost
+  become: true
+  
+- name: Find Linux checklist files
+  ansible.builtin.find:
+    paths: "{{ linux_checklist_storage_path | dirname }}"
+    patterns: "*.cklb"
+    file_type: file
+  register: linux_checklists
+  when: ansible_os_family != 'Windows'
+
+- name: Find Windows checklist files
+  ansible.windows.win_find:
+    paths: "{{ win_checklist_storage_path | win_dirname }}"
+    patterns: "*.cklb"
+    file_type: file
+  register: win_checklists
+  when: ansible_os_family == 'Windows'
+
+- name: Collect checklist files from remote server
+  ansible.builtin.fetch:
+    src: "{{ item.path }}"
+    dest: "{{ checklist_archive_storage_path }}/{{ inventory_hostname }}/"
+    flat: true
+  loop: >-
+    {{
+      win_checklists.files
+      if ansible_os_family == 'Windows'
+      else linux_checklists.files
+    }}
+  loop_control:
+    label: "{{ item.path }}"

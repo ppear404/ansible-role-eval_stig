@@ -3,10 +3,11 @@
   ansible.builtin.file:
     path: "{{ checklist_archive_storage_path }}/{{ inventory_hostname }}"
     state: directory
-    owner: "{{ lookup('ansible.builtin.env', 'USER') }}"
+    owner: "{{ checklist_archive_owner }}"
     mode: '0755'
   delegate_to: localhost
   become: true
+  become_user: "{{ checklist_archive_owner }}"
   
 - name: Find Linux checklist files
   ansible.builtin.find:

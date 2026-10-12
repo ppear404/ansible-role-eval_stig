@@ -38,6 +38,7 @@ ansible-galaxy collection install -r requirements.yml
 | `eval_stig_start_boundary` | `2026-10-01T00:00:00` | Windows scheduled task start boundary in ISO 8601 format (`YYYY-MM-DDTHH:MM:SS`). |
 | `linux_eval_stig_cron_schedule` | `monthly` | Linux cron special time: `monthly`, `weekly`, `daily`, `hourly`, or `reboot`. |
 | `checklist_archive_storage_path` | `/opt/STIG_Compliance/Checklist_Archive` | Controller-side directory where fetched checklist files are archived under a subdirectory for each inventory host. |
+| `checklist_archive_owner` | `ansible` | Controller-side user that creates and owns the fetched checklist archive directories. |
 | `git_repo_path` | `/opt/STIG_Compliance/Checklist_Archive` | Controller-side Git repository path used by the `git` tag to commit and push archived checklist changes. The repository must already be initialized with an `origin` remote. |
 
 Override defaults in inventory or play variables when your artifact repository or desired installation paths differ. Keep the destination paths aligned with the extracted package version.

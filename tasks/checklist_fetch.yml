@@ -7,7 +7,6 @@
     mode: '0755'
   delegate_to: localhost
   become: true
-  become_user: "{{ checklist_archive_owner }}"
   
 - name: Find Linux checklist files
   ansible.builtin.find:
